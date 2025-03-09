@@ -1,14 +1,49 @@
 import type { Analyzer } from '@/tamper/analyzer'
-import { transform } from '@swc/core'
-import consola from 'consola'
+import {
+	transform,
+	type FunctionDeclaration,
+	type VariableDeclaration,
+	type VariableDeclarator
+} from '@swc/core'
 
 export class Transformer {
+	private readonly transformedFunctions: Record<string, string>
 	constructor(private readonly analyzer: Analyzer) {}
+
+	transformConst(declarations: VariableDeclarator[]) {
+		for (const declarator of declarations) {
+			if (declarator.init) {
+				const initType = declarator.init.type
+				switch (initType) {
+					case 'StringLiteral':
+						break
+				}
+			}
+		}
+	}
+
+	transformVariableDeclaration(node: VariableDeclaration) {
+		switch (node.kind) {
+			case 'const':
+				this.transformConst(node.declarations)
+				break
+		}
+	}
+
+	transformFunctionDeclaration(node: FunctionDeclaration) {
+		if (node.body) {
+			// Todo:
+		}
+	}
 
 	async preTransform() {
 		for (const variable of this.analyzer.variables) {
-			consola.debug('Variable', variable)
+			this.transformVariableDeclaration(variable)
 		}
+	}
+
+	async postTransform() {
+		// ...
 	}
 
 	async transform() {
