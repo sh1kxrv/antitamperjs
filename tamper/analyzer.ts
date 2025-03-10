@@ -5,7 +5,6 @@ import type {
 	Statement,
 	VariableDeclaration
 } from '@swc/core'
-import consola from 'consola'
 
 export class Analyzer {
 	public readonly variables: VariableDeclaration[] = []

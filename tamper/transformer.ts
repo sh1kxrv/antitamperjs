@@ -2,7 +2,6 @@ import type { Analyzer } from '@/tamper/analyzer'
 import { CodegenBlockStatement } from '@/tamper/codegen/codegen.blockstmt'
 import { CodegenVariable } from '@/tamper/codegen/codegen.variable'
 import { NameGen } from '@/tamper/name-gen'
-import { UNKNOWN_SPAN } from '@/utils'
 import {
 	transform,
 	type BlockStatement,
@@ -10,9 +9,9 @@ import {
 	type VariableDeclaration,
 	type VariableDeclarator
 } from '@swc/core'
-import consola from 'consola'
 
 export class Transformer {
+	private tamperedVariableName: string = ''
 	private readonly funcBodies: Record<string, BlockStatement> = {}
 	private readonly postTransformedFunctions: Record<
 		string,
@@ -81,7 +80,11 @@ export class Transformer {
 
 	async postTransform() {
 		const body = this.analyzer.getBody()
-		const variable = this.variableCg.createVariable('$RR', 'const')
+		this.tamperedVariableName = `$${this.nameGen.generate(6)}`
+		const variable = this.variableCg.createVariable(
+			this.tamperedVariableName,
+			'const'
+		)
 
 		for (const funcName of Object.keys(this.postTransformedFunctions)) {
 			const body = this.funcBodies[funcName]
@@ -101,7 +104,7 @@ export class Transformer {
 			const memExpProp =
 				blockStmtWrapped.createComputedPropertyToRefString(funcName)
 			const memExp = blockStmtWrapped.createMemberExpression(
-				'$RR',
+				this.tamperedVariableName,
 				2,
 				memExpProp
 			)
