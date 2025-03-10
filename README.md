@@ -1,4 +1,4 @@
-# Terra Tamper
+# Anti-Tamper | JS
 
 [RxstyTerra](https://github.com/sh1kxrv/rxstyterrv)
 

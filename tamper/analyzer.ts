@@ -17,7 +17,6 @@ export class Analyzer {
 	}
 
 	analyzeFunctionDeclaration(node: FunctionDeclaration) {
-		consola.debug('Analyzing function declaration', node)
 		this.functions.push(node)
 	}
 
@@ -40,5 +39,9 @@ export class Analyzer {
 
 	public getProgram() {
 		return this.program
+	}
+
+	public getBody() {
+		return this.program.body
 	}
 }

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@swc/types':
+    hash: e09116e4d3351c40762ec57453edae4bb5cf8276790ebcdd331e3384161487ab
+    path: patches/@swc__types.patch
+
 importers:
 
   .:
@@ -799,7 +804,7 @@ snapshots:
   '@swc/core@1.11.8':
     dependencies:
       '@swc/counter': 0.1.3
-      '@swc/types': 0.1.19
+      '@swc/types': 0.1.19(patch_hash=e09116e4d3351c40762ec57453edae4bb5cf8276790ebcdd331e3384161487ab)
     optionalDependencies:
       '@swc/core-darwin-arm64': 1.11.8
       '@swc/core-darwin-x64': 1.11.8
@@ -814,7 +819,7 @@ snapshots:
 
   '@swc/counter@0.1.3': {}
 
-  '@swc/types@0.1.19':
+  '@swc/types@0.1.19(patch_hash=e09116e4d3351c40762ec57453edae4bb5cf8276790ebcdd331e3384161487ab)':
     dependencies:
       '@swc/counter': 0.1.3
 
