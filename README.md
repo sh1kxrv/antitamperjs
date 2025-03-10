@@ -34,3 +34,7 @@ function randInt(min, max) {
 ```
 
 </td></tr></tbody></table>
+
+## TODO
+
+- [ ] Refactor code
