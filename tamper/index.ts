@@ -18,7 +18,7 @@ export class AntiTamper {
 
 		const transformed = await transformer.transform()
 
-		writeFile('tampered.js', transformed.code, () => {})
+		writeFile('out.js', transformed.code, () => {})
 
 		consola.success('Transformed!')
 	}

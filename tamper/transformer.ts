@@ -2,10 +2,14 @@ import type { Analyzer } from '@/tamper/analyzer'
 import { CodegenBlockStatement } from '@/tamper/codegen/codegen.blockstmt'
 import { CodegenVariable } from '@/tamper/codegen/codegen.variable'
 import { NameGen } from '@/tamper/name-gen'
+import { UNKNOWN_SPAN } from '@/utils'
 import {
 	transform,
 	type BlockStatement,
+	type Expression,
+	type ExpressionStatement,
 	type FunctionDeclaration,
+	type ReturnStatement,
 	type VariableDeclaration,
 	type VariableDeclarator
 } from '@swc/core'
@@ -46,8 +50,24 @@ export class Transformer {
 
 	transformFunctionDeclaration(node: FunctionDeclaration) {
 		if (node.body) {
-			const bodyAst = node.body
-			const name = this.nameGen.generate(12)
+			const bodyAst = Object.assign({}, node.body)
+
+			const lastStmt = bodyAst.stmts.at(-1)
+			if (
+				lastStmt?.type === 'ReturnStatement' &&
+				lastStmt.argument &&
+				lastStmt.argument?.type.includes('Expression')
+			) {
+				const retStmt = bodyAst.stmts.pop()! as ReturnStatement
+				const expStmt: ExpressionStatement = {
+					expression: retStmt.argument as Expression,
+					span: UNKNOWN_SPAN,
+					type: 'ExpressionStatement'
+				}
+				bodyAst.stmts.push(expStmt)
+			}
+
+			const name = this.nameGen.generate(8)
 			this.postTransformedFunctions[name] = node
 			this.funcBodies[name] = bodyAst
 			node.body = undefined
@@ -92,7 +112,7 @@ export class Transformer {
 				const transformed = await this.blockStatementTransform(body)
 				variable.appendKeyValueProperty(
 					funcName,
-					transformed.replace(/\n/g, '').replace('return ', '')
+					transformed.replace(/\n/g, '')
 				)
 			}
 		}

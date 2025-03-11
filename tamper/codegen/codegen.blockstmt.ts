@@ -5,6 +5,7 @@ import type {
 	CallExpression,
 	ComputedPropName,
 	Expression,
+	ExpressionStatement,
 	Identifier,
 	MemberExpression,
 	ReturnStatement,
@@ -15,6 +16,7 @@ import type {
 type WrappedBlockStatement = {
 	block: BlockStatement
 	appendReturnStmt: (argument: Expression | undefined) => void
+	appendExpressionStmt: (expression: Expression) => void
 	createCallee: (
 		calleeId: string,
 		ctxt: number,
@@ -114,9 +116,19 @@ export class CodegenBlockStatement {
 			return computedProp
 		}
 
+		const appendExpressionStmt = (expression: Expression) => {
+			const expressionStmt: ExpressionStatement = {
+				type: 'ExpressionStatement',
+				span: UNKNOWN_SPAN,
+				expression
+			}
+			stmts.push(expressionStmt)
+		}
+
 		return {
 			block: blockStatement,
 			appendReturnStmt,
+			appendExpressionStmt,
 			createCallee,
 			createArgument,
 			createMemberExpression,
