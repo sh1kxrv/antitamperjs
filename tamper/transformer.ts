@@ -13,6 +13,7 @@ import {
 	type VariableDeclaration,
 	type VariableDeclarator
 } from '@swc/core'
+import consola from 'consola'
 
 export class Transformer {
 	private tamperedVariableName: string = ''
@@ -53,18 +54,16 @@ export class Transformer {
 			const bodyAst = Object.assign({}, node.body)
 
 			const lastStmt = bodyAst.stmts.at(-1)
-			if (
-				lastStmt?.type === 'ReturnStatement' &&
-				lastStmt.argument &&
-				lastStmt.argument?.type.includes('Expression')
-			) {
+			if (lastStmt?.type === 'ReturnStatement') {
 				const retStmt = bodyAst.stmts.pop()! as ReturnStatement
-				const expStmt: ExpressionStatement = {
-					expression: retStmt.argument as Expression,
-					span: UNKNOWN_SPAN,
-					type: 'ExpressionStatement'
+				if (retStmt.argument && retStmt.argument?.type.includes('Expression')) {
+					const expStmt: ExpressionStatement = {
+						expression: retStmt.argument as Expression,
+						span: UNKNOWN_SPAN,
+						type: 'ExpressionStatement'
+					}
+					bodyAst.stmts.push(expStmt)
 				}
-				bodyAst.stmts.push(expStmt)
 			}
 
 			const name = this.nameGen.generate(8)
@@ -75,17 +74,19 @@ export class Transformer {
 	}
 
 	async blockStatementTransform(block: BlockStatement) {
-		const transformed = await transform({
-			body: block.stmts,
-			interpreter: null!,
-			span: {
-				end: block.span.end,
-				start: block.span.start
+		const transformed = await transform(
+			{
+				body: block.stmts,
+				interpreter: null!,
+				span: block.span,
+				ctxt: 0,
+				type: 'Module'
 			},
-			ctxt: 0,
-			type: 'Module'
-		})
-		return transformed.code
+			{
+				minify: true
+			}
+		)
+		return transformed.code.replaceAll('"', '\\"')
 	}
 
 	async preTransform() {
@@ -94,6 +95,7 @@ export class Transformer {
 		}
 
 		for (const func of this.analyzer.functions) {
+			consola.debug(func)
 			this.transformFunctionDeclaration(func)
 		}
 	}
