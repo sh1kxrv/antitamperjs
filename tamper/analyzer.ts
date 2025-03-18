@@ -1,46 +1,42 @@
-import type {
-	FunctionDeclaration,
-	ModuleItem,
-	Program,
-	Statement,
-	VariableDeclaration
-} from '@swc/core'
+import type { ModuleItem, Program, Statement } from '@swc/core'
+import { FunctionAnalyzer } from './node/decl/decl.function'
+import { VariableAnalyzer } from './node/decl/decl.variable'
 
 export class Analyzer {
-	public readonly variables: VariableDeclaration[] = []
-	public readonly functions: FunctionDeclaration[] = []
+	private readonly fnAnalyzer = new FunctionAnalyzer()
+	private readonly varAnalyzer = new VariableAnalyzer()
+
 	constructor(private readonly program: Program) {}
 
-	analyzeVariableDeclaration(node: VariableDeclaration) {
-		this.variables.push(node)
-	}
-
-	analyzeFunctionDeclaration(node: FunctionDeclaration) {
-		this.functions.push(node)
-	}
-
-	analyzeNode(node: ModuleItem | Statement) {
-		switch (node.type) {
-			case 'VariableDeclaration':
-				this.analyzeVariableDeclaration(node)
-				break
+	private analyzeStatement(statement: Statement | ModuleItem) {
+		switch (statement.type) {
 			case 'FunctionDeclaration':
-				this.analyzeFunctionDeclaration(node)
+				this.fnAnalyzer.analyze(statement)
+				break
+			case 'VariableDeclaration':
+				this.varAnalyzer.analyze(statement)
+				break
+			case 'BlockStatement':
+				this.analyzeStatements(statement.stmts)
 				break
 		}
 	}
 
-	async analyze() {
-		for (const node of this.program.body) {
-			this.analyzeNode(node)
+	private analyzeStatements(statements: (Statement | ModuleItem)[]) {
+		for (const statement of statements) {
+			this.analyzeStatement(statement)
 		}
 	}
 
-	public getProgram() {
-		return this.program
+	public analyze() {
+		this.analyzeStatements(this.program.body)
 	}
 
-	public getBody() {
-		return this.program.body
+	public get fnToTransform() {
+		return this.fnAnalyzer.toTransform
+	}
+
+	public get arrowFnToTransform() {
+		return this.varAnalyzer.toTransform
 	}
 }

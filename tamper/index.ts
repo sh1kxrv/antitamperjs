@@ -1,9 +1,9 @@
 import consola from 'consola'
 
 import { parse } from '@swc/core'
-import { Analyzer } from '@/tamper/analyzer'
 import { Transformer } from '@/tamper/transformer'
 import { writeFile } from 'node:fs'
+import { Analyzer } from './analyzer'
 
 export class AntiTamper {
 	constructor(private readonly code: string) {}
