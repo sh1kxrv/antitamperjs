@@ -3,10 +3,6 @@ import { AstAnalyzer } from '@/tamper/api/api.analyzer'
 import type { VariableDeclaration, VariableDeclarator } from '@swc/core'
 
 export class VariableDeclarationAnalyzer extends AstAnalyzer<VariableDeclaration> {
-	constructor() {
-		super(VariableDeclarationAnalyzer.name)
-	}
-
 	private declaratorAnalyzer = new DeclaratorAnalyzer()
 
 	private analyzeDeclarators(declarators: VariableDeclarator[]) {

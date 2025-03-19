@@ -1,8 +1,11 @@
 import { DeclarationAnalyzer } from '@/tamper/analyzer/decl/decl.analyzer'
-import type { ModuleItem, Program, Statement } from '@swc/core'
+import { AstAnalyzer } from '@/tamper/api/api.analyzer'
+import type { ModuleItem, Node, Program, Statement } from '@swc/core'
 
-export class Analyzer {
-	constructor(private readonly program: Program) {}
+export class Analyzer extends AstAnalyzer<Node> {
+	constructor(private readonly program: Program) {
+		super()
+	}
 
 	public declarationAnalyzer = new DeclarationAnalyzer()
 
@@ -18,7 +21,7 @@ export class Analyzer {
 		}
 	}
 
-	private analyzeStatements(statements: (Statement | ModuleItem)[]) {
+	public analyzeStatements(statements: (Statement | ModuleItem)[]) {
 		for (const statement of statements) {
 			this.analyzeStatement(statement)
 		}
