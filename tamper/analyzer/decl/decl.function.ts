@@ -1,5 +1,6 @@
 import { Analyzer } from '@/tamper/analyzer'
 import { AstAnalyzer } from '@/tamper/api/api.analyzer'
+import { getMemoryElement } from '@/tamper/utils/utils.memory'
 import type { FunctionDeclaration } from '@swc/core'
 
 export class FunctionDeclarationAnalyzer extends AstAnalyzer<FunctionDeclaration> {
@@ -10,8 +11,8 @@ export class FunctionDeclarationAnalyzer extends AstAnalyzer<FunctionDeclaration
 			statement.body?.stmts.length > 0
 		) {
 			this.marked.push(statement)
-			const parentAnalyzer = this.getInstance<Analyzer>(Analyzer.name)
-			parentAnalyzer.analyzeStatements(statement.body.stmts)
+			const parentAnalyzer = getMemoryElement<Analyzer>(Analyzer)
+			parentAnalyzer?.analyzeStatements(statement.body.stmts)
 		}
 	}
 
