@@ -13,7 +13,6 @@ export class DeclarationAnalyzer extends AstAnalyzer<Declaration> {
 	public varDeclAnalyzer = new VariableDeclarationAnalyzer()
 
 	public override analyze(declaration: Declaration): void {
-		consola.debug('ANALYZE DECLARATION', declaration.type)
 		switch (declaration.type) {
 			case 'FunctionDeclaration':
 				this.fnDeclAnalyzer.analyze(declaration)
