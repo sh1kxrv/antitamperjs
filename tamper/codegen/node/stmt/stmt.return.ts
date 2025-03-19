@@ -1,5 +1,5 @@
 import type { Expression, ReturnStatement } from '@swc/core'
-import type { BNode } from '../api/node'
+import type { BNode } from '@/tamper/api/api.node'
 import { SPAN } from '@/utils'
 
 export class StmtReturn implements BNode<ReturnStatement> {

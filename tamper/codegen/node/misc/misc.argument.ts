@@ -1,5 +1,5 @@
-import type { ExpCall } from '../exp/exp.call'
-import type { ExpMember } from '../exp/exp.member'
+import type { ExpCall } from '@/tamper/codegen/node/exp/exp.call'
+import type { ExpMember } from '@/tamper/codegen/node/exp/exp.member'
 import type { Argument as SwcArgument } from '@swc/core'
 
 export class Argument {
