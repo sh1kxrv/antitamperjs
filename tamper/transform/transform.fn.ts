@@ -7,7 +7,10 @@ export class FunctionTransformer implements AstTransformer {
 
 	transform(): void {
 		for (const fn of this.fnAnalyzer.markedStatements) {
-			consola.debug('Function:', fn.identifier.value)
+			consola.debug('Transforming:', fn.identifier.value, fn.ctxt)
+			// if(fn.body){
+
+			// }
 		}
 	}
 }

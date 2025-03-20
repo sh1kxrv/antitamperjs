@@ -17,6 +17,7 @@ export class FunctionDeclarationAnalyzer extends AstAnalyzer<FunctionDeclaration
 	}
 
 	public override analyze(statement: FunctionDeclaration) {
+		// const wrappedFn = new
 		this.analyzeFnDecl(statement)
 	}
 }

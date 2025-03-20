@@ -1,15 +1,21 @@
-const T = '1234'
-
-function test() {
-	function a() {
-		function b() {
-			function c() {
-				return 1
-			}
-		}
+function calculator() {
+	function add(a, b) {
+		return a + b
 	}
 
-	function test2() {
-		console.log('test')
+	function sub(a, b) {
+		return a - b
+	}
+
+	return {
+		add,
+		sub
 	}
 }
+
+const calc = calculator()
+const resultAdd = calc.add(1, 2)
+const resultSub = calc.sub(1, 2)
+
+console.log(resultAdd)
+console.log(resultSub)
