@@ -1,23 +1,53 @@
-import { Analyzer } from '@/tamper/analyzer'
-import { AstAnalyzer } from '@/tamper/api/api.analyzer'
-import { getMemoryElement } from '@/tamper/utils/utils.memory'
-import type { FunctionDeclaration } from '@swc/core'
+import { AstAnalyzer, AstFlag } from '@/tamper/api/api.analyzer'
+import type { FunctionDeclaration, Identifier } from '@swc/core'
+import { WrappedStatement } from '@/tamper/api/api.statement'
+import { WrappedBlockStatement } from '@/tamper/analyzer/stmt/stmt.block'
+
+class WrappedIdentifier extends WrappedStatement<Identifier> {
+	get name(): string {
+		return this.statement.value
+	}
+}
+
+export class WrappedFunctionDeclaration extends WrappedStatement<FunctionDeclaration> {
+	body?: WrappedBlockStatement
+	identifier: WrappedIdentifier
+
+	constructor(
+		statement: FunctionDeclaration,
+		flag: AstFlag = AstFlag.Modifiable
+	) {
+		super(statement, flag)
+		if (statement.body) {
+			this.body = new WrappedBlockStatement(statement.body)
+		}
+
+		this.identifier = new WrappedIdentifier(
+			statement.identifier,
+			AstFlag.Modifiable
+		)
+	}
+
+	override unwrap(): FunctionDeclaration {
+		return {
+			...this.statement,
+			body: this.body?.unwrap(),
+			identifier: this.identifier.unwrap()
+		}
+	}
+}
 
 export class FunctionDeclarationAnalyzer extends AstAnalyzer<FunctionDeclaration> {
-	private analyzeFnDecl(statement: FunctionDeclaration) {
+	public override analyze(
+		statement: FunctionDeclaration
+	): WrappedFunctionDeclaration {
 		if (
 			!statement.async &&
 			statement.body?.stmts &&
 			statement.body?.stmts.length > 0
 		) {
-			this.marked.push(statement)
-			const parentAnalyzer = getMemoryElement<Analyzer>(Analyzer)
-			parentAnalyzer?.analyzeStatements(statement.body.stmts)
+			return new WrappedFunctionDeclaration(statement)
 		}
-	}
-
-	public override analyze(statement: FunctionDeclaration) {
-		// const wrappedFn = new
-		this.analyzeFnDecl(statement)
+		return new WrappedFunctionDeclaration(statement, AstFlag.Readonly)
 	}
 }

@@ -1,33 +1,32 @@
 import { DeclarationAnalyzer } from '@/tamper/analyzer/decl/decl.analyzer'
-import { AstAnalyzer } from '@/tamper/api/api.analyzer'
+import { StatementAnalyzer } from '@/tamper/analyzer/stmt/stmt.analyzer'
+import { AstFlag } from '@/tamper/api/api.analyzer'
+import { WrappedStatement } from '@/tamper/api/api.statement'
 import type { ModuleItem, Node, Program, Statement } from '@swc/core'
 
-export class Analyzer extends AstAnalyzer<Node> {
-	constructor(private readonly program: Program) {
-		super()
-	}
+export class Analyzer {
+	constructor(private readonly program: Program) {}
 
-	public declarationAnalyzer = new DeclarationAnalyzer()
+	private declarationAnalyzer = new DeclarationAnalyzer()
+	private statementAnalyzer = new StatementAnalyzer()
 
-	private analyzeStatement(statement: Statement | ModuleItem) {
+	private analyzeNode(
+		statement: Statement | ModuleItem
+	): WrappedStatement<Node> {
 		switch (statement.type) {
 			case 'FunctionDeclaration':
 			case 'VariableDeclaration':
-				this.declarationAnalyzer.analyze(statement)
-				break
+				return this.declarationAnalyzer.analyze(statement)
 			case 'BlockStatement':
-				this.analyzeStatements(statement.stmts)
-				break
+				return this.statementAnalyzer.analyze(statement)
+			default:
+				return new WrappedStatement(statement, AstFlag.Readonly)
 		}
 	}
 
-	public analyzeStatements(statements: (Statement | ModuleItem)[]) {
-		for (const statement of statements) {
-			this.analyzeStatement(statement)
+	public *analyze() {
+		for (const statement of this.program.body) {
+			yield this.analyzeNode(statement)
 		}
-	}
-
-	public analyze() {
-		this.analyzeStatements(this.program.body)
 	}
 }

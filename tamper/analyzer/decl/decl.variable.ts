@@ -1,17 +1,23 @@
 import { DeclaratorAnalyzer } from '@/tamper/analyzer/decl/declarator/declarator.analyzer'
-import { AstAnalyzer } from '@/tamper/api/api.analyzer'
+import { AstAnalyzer, AstFlag } from '@/tamper/api/api.analyzer'
+import { WrappedStatement } from '@/tamper/api/api.statement'
 import type { VariableDeclaration, VariableDeclarator } from '@swc/core'
 
-export class VariableDeclarationAnalyzer extends AstAnalyzer<VariableDeclaration> {
-	private declaratorAnalyzer = new DeclaratorAnalyzer()
+export class WrappedVariableDeclaration extends WrappedStatement<VariableDeclaration> {
+	private readonly declaratorAnalyzer = new DeclaratorAnalyzer()
+	declarators: WrappedStatement<VariableDeclarator>[] = []
 
-	private analyzeDeclarators(declarators: VariableDeclarator[]) {
-		for (const declarator of declarators) {
-			this.declaratorAnalyzer.analyze(declarator)
+	constructor(statement: VariableDeclaration, flag: AstFlag) {
+		super(statement, flag)
+		for (const declarator of statement.declarations) {
+			const analyzed = this.declaratorAnalyzer.analyze(declarator)
+			this.declarators.push(analyzed)
 		}
 	}
+}
 
-	public override analyze(declaration: VariableDeclaration) {
-		this.analyzeDeclarators(declaration.declarations)
+export class VariableDeclarationAnalyzer extends AstAnalyzer<VariableDeclaration> {
+	public analyze(declaration: VariableDeclaration): WrappedVariableDeclaration {
+		return new WrappedVariableDeclaration(declaration, AstFlag.Modifiable)
 	}
 }

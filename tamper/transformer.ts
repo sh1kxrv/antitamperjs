@@ -1,18 +1,11 @@
-import { FunctionTransformer } from '@/tamper/transform/transform.fn'
 import type { Analyzer } from './analyzer'
 import { transform, type Program } from '@swc/core'
 
 export class Transformer {
-	private fnTransformer: FunctionTransformer
-
 	constructor(
 		analyzer: Analyzer,
 		private readonly program: Program
-	) {
-		this.fnTransformer = new FunctionTransformer(
-			analyzer.declarationAnalyzer.fnDeclAnalyzer
-		)
-	}
+	) {}
 
 	compile() {
 		return transform(this.program, {
@@ -36,8 +29,6 @@ export class Transformer {
 	}
 
 	async transform() {
-		this.fnTransformer.transform()
-
 		const compiled = await this.compile()
 		return compiled
 	}

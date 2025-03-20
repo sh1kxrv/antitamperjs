@@ -1,9 +1,8 @@
 import consola from 'consola'
 
 import { parse } from '@swc/core'
-import { writeFile } from 'node:fs'
 import { Analyzer } from './analyzer'
-import { Transformer } from '@/tamper/transformer'
+import { WrappedFunctionDeclaration } from '@/tamper/analyzer/decl/decl.function'
 
 export class AntiTamper {
 	constructor(private readonly code: string) {}
@@ -12,12 +11,21 @@ export class AntiTamper {
 		const parsed = await parse(this.code)
 
 		const analyzer = new Analyzer(parsed)
-		await analyzer.analyze()
+		const wrappedStatements = [...analyzer.analyze()]
 
-		const transformer = new Transformer(analyzer, parsed)
-		const transformed = await transformer.transform()
+		for (const wrapped of wrappedStatements.filter(x => x.isModifiable)) {
+			const unwrapped = wrapped.unwrap()
+			consola.debug('Is modifiable:', unwrapped.type)
+			if (wrapped instanceof WrappedFunctionDeclaration) {
+				consola.debug('Fn:')
+				consola.debug('-> Identifier:', wrapped.identifier.name)
+			}
+		}
 
-		writeFile('out.js', transformed.code, () => {})
+		// const transformer = new Transformer(analyzer, parsed)
+		// const transformed = await transformer.transform()
+
+		// writeFile('out.js', transformed.code, () => {})
 
 		consola.success('Transformed!')
 	}
