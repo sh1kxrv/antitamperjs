@@ -7,6 +7,10 @@ class WrappedIdentifier extends WrappedStatement<Identifier> {
 	get name(): string {
 		return this.statement.value
 	}
+
+	override unwrap(): Identifier {
+		return this.statement
+	}
 }
 
 export class WrappedFunctionDeclaration extends WrappedStatement<FunctionDeclaration> {

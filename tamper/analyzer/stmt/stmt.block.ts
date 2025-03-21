@@ -2,7 +2,7 @@ import { DeclarationAnalyzer } from '@/tamper/analyzer/decl/decl.analyzer'
 import { StatementAnalyzer } from '@/tamper/analyzer/stmt/stmt.analyzer'
 import { AstAnalyzer, AstFlag } from '@/tamper/api/api.analyzer'
 import { WrappedStatement } from '@/tamper/api/api.statement'
-import type { BlockStatement, Statement } from '@swc/core'
+import type { BlockStatement, Node, Statement } from '@swc/core'
 
 export class WrappedBlockStatement extends WrappedStatement<BlockStatement> {
 	private stmts: WrappedStatement<Statement>[] = []
@@ -28,6 +28,12 @@ export class WrappedBlockStatement extends WrappedStatement<BlockStatement> {
 			}
 			this.stmts.push(analyzed)
 		}
+	}
+
+	getStatements<Z extends Node = Statement, T = WrappedStatement<Z>>(
+		clazz: T extends WrappedStatement<Z> ? new (...args: any) => T : never
+	): T[] {
+		return this.stmts.filter(x => clazz!.name === x.constructor.name) as T[]
 	}
 }
 

@@ -1,14 +1,26 @@
-import type { Analyzer } from './analyzer'
-import { transform, type Program } from '@swc/core'
+import type { WrappedStatement } from '@/tamper/api/api.statement'
+import { transform, type Program, type Statement } from '@swc/core'
 
 export class Transformer {
-	constructor(
-		analyzer: Analyzer,
-		private readonly program: Program
-	) {}
+	constructor(private readonly stmts: WrappedStatement[]) {}
 
-	compile() {
-		return transform(this.program, {
+	private build(statements: Statement[]): Program {
+		return {
+			body: statements,
+			span: {
+				start: 1,
+				end: 99999
+			},
+			interpreter: null!,
+			type: 'Module'
+		}
+	}
+
+	private compile() {
+		const unwrapped = this.stmts.map(x => x.unwrap())
+		const builded = this.build(unwrapped)
+
+		return transform(builded, {
 			jsc: {
 				parser: {
 					syntax: 'ecmascript',
@@ -28,8 +40,7 @@ export class Transformer {
 		})
 	}
 
-	async transform() {
-		const compiled = await this.compile()
-		return compiled
+	transform() {
+		return this.compile()
 	}
 }
