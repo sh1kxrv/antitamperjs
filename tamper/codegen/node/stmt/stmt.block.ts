@@ -5,8 +5,6 @@ import type { BlockStatement, Statement } from '@swc/core'
 
 export class JsStmtBlock implements BNode<BlockStatement> {
 	private _stmts: BNode<Statement>[] = []
-	constructor(private readonly ctxt: number) {}
-
 	push(stmt: BNode<any>) {
 		this._stmts.push(stmt)
 	}
@@ -28,7 +26,7 @@ export class JsStmtBlock implements BNode<BlockStatement> {
 			span: SPAN,
 			stmts: this._stmts.map(stmt => stmt.build()),
 			type: 'BlockStatement',
-			ctxt: this.ctxt
+			ctxt: 0
 		}
 	}
 }

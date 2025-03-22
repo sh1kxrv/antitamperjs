@@ -1,6 +1,12 @@
 import { WrappedFunctionDeclaration } from '@/tamper/analyzer/decl/decl.function'
 import type { WrappedStatement } from '@/tamper/api/api.statement'
+import {
+	ExpBinaryOperator,
+	JsExpBinary
+} from '@/tamper/codegen/node/exp/exp.binary'
 import { JsFnDecl } from '@/tamper/codegen/node/fn/fn.class'
+import { Literal } from '@/tamper/codegen/node/misc/literal'
+import { JsStmtReturn } from '@/tamper/codegen/node/stmt/stmt.return'
 import {
 	transform,
 	type FunctionDeclaration,
@@ -52,8 +58,18 @@ export class Transformer {
 	}
 
 	private initialize() {
-		const testFn = new JsFnDecl(3, 'test')
+		const testFn = new JsFnDecl('test')
 		testFn.addParam('a')
+
+		const closuredFn = new JsFnDecl('inner')
+		const { ident } = closuredFn.addParam('b')
+
+		const ret = new JsStmtReturn(
+			new JsExpBinary(ExpBinaryOperator.Multiply, ident, Literal.numeric(4))
+		)
+		closuredFn.body.push(ret)
+
+		testFn.body.push(closuredFn)
 
 		const builded = testFn.asWrapped()
 

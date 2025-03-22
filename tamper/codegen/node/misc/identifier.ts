@@ -5,7 +5,6 @@ import type { Identifier } from '@swc/core'
 
 export class JsIdentifier implements BNode<Identifier> {
 	constructor(
-		private readonly ctxt: number,
 		public readonly name: string,
 		public readonly isOptional: boolean = false
 	) {}
@@ -20,7 +19,7 @@ export class JsIdentifier implements BNode<Identifier> {
 			span: SPAN,
 			type: 'Identifier',
 			value: this.name,
-			ctxt: this.ctxt
+			ctxt: 0
 		}
 	}
 }

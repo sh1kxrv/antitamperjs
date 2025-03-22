@@ -14,13 +14,12 @@ import { WrappedArrowFn } from '@/tamper/analyzer/decl/declarator/declarator.arr
 
 class JsFn<T extends Node> implements BNode<T> {
 	constructor(
-		protected readonly ctxt: number,
 		name?: string | null,
 		isAsync: boolean = false,
 		isGenerator: boolean = false
 	) {
-		this._identifier = new JsIdentifier(ctxt - 1, name ?? '_anon_')
-		this._body = new JsStmtBlock(ctxt)
+		this._identifier = new JsIdentifier(name ?? '_anon_')
+		this._body = new JsStmtBlock()
 		this._isAsync = isAsync
 		this._isGenerator = isGenerator
 	}
@@ -39,9 +38,13 @@ class JsFn<T extends Node> implements BNode<T> {
 	}
 
 	addParam(param: string) {
-		const paramNode = new JsFnParam(new JsIdentifier(this.ctxt, param))
+		const ident = new JsIdentifier(param)
+		const paramNode = new JsFnParam(ident)
 		this._params.push(paramNode)
-		return param
+		return {
+			ident,
+			param: paramNode
+		}
 	}
 
 	get params() {
@@ -71,12 +74,11 @@ class JsFn<T extends Node> implements BNode<T> {
 
 export class JsFnDecl extends JsFn<FunctionDeclaration> {
 	constructor(
-		ctxt: number,
 		name: string,
 		isAsync: boolean = false,
 		isGenerator: boolean = false
 	) {
-		super(ctxt, name, isAsync, isGenerator)
+		super(name, isAsync, isGenerator)
 	}
 	override build(): FunctionDeclaration {
 		return {
@@ -88,7 +90,7 @@ export class JsFnDecl extends JsFn<FunctionDeclaration> {
 			body: this.body.build(),
 			declare: false,
 			identifier: this.identifier.build(),
-			ctxt: this.ctxt
+			ctxt: 0
 		}
 	}
 
@@ -98,12 +100,8 @@ export class JsFnDecl extends JsFn<FunctionDeclaration> {
 }
 
 export class JsFnArrow extends JsFn<ArrowFunctionExpression> {
-	constructor(
-		ctxt: number,
-		isAsync: boolean = false,
-		isGenerator: boolean = false
-	) {
-		super(ctxt, null, isAsync, isGenerator)
+	constructor(isAsync: boolean = false, isGenerator: boolean = false) {
+		super(null, isAsync, isGenerator)
 	}
 
 	override build(): ArrowFunctionExpression {
@@ -114,7 +112,7 @@ export class JsFnArrow extends JsFn<ArrowFunctionExpression> {
 			params: this.params.map(param => param.build().pat),
 			body: this.body.build(),
 			type: 'ArrowFunctionExpression',
-			ctxt: this.ctxt
+			ctxt: 0
 		}
 	}
 
