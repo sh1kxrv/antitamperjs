@@ -1,17 +1,8 @@
 import { AstAnalyzer, AstFlag } from '@/tamper/api/api.analyzer'
-import type { FunctionDeclaration, Identifier } from '@swc/core'
+import type { FunctionDeclaration } from '@swc/core'
 import { WrappedStatement } from '@/tamper/api/api.statement'
 import { WrappedBlockStatement } from '@/tamper/analyzer/stmt/stmt.block'
-
-export class WrappedIdentifier extends WrappedStatement<Identifier> {
-	get name(): string {
-		return this.statement.value
-	}
-
-	override unwrap(): Identifier {
-		return this.statement
-	}
-}
+import { WrappedIdentifier } from '@/tamper/analyzer/misc/identifier'
 
 export class WrappedFunctionDeclaration extends WrappedStatement<FunctionDeclaration> {
 	body?: WrappedBlockStatement

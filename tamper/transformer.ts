@@ -5,7 +5,6 @@ import {
 	JsExpBinary
 } from '@/tamper/codegen/node/exp/exp.binary'
 import { JsFnDecl } from '@/tamper/codegen/node/fn/fn.class'
-import { Literal } from '@/tamper/codegen/node/misc/literal'
 import { JsStmtReturn } from '@/tamper/codegen/node/stmt/stmt.return'
 import {
 	transform,
@@ -56,14 +55,13 @@ export class Transformer {
 
 	private initialize() {
 		const testFn = new JsFnDecl('test')
-		testFn.addParam('a')
+		const { ident: a } = testFn.addParam('a')
 
 		const closuredFn = new JsFnDecl('inner')
-		const { ident } = closuredFn.addParam('b')
+		const { ident: b } = closuredFn.addParam('b')
 
-		const ret = new JsStmtReturn(
-			new JsExpBinary(ExpBinaryOperator.Multiply, ident, Literal.numeric(4))
-		)
+		const binary = new JsExpBinary(ExpBinaryOperator.Multiply, a, b)
+		const ret = new JsStmtReturn(binary)
 		closuredFn.body.push(ret)
 
 		testFn.body.push(closuredFn)
