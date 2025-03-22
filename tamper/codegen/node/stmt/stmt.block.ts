@@ -17,10 +17,6 @@ export class JsStmtBlock implements BNode<BlockStatement> {
 		this._stmts.splice(index, 0, stmt)
 	}
 
-	asWrapped(): WrappedBlockStatement {
-		return new WrappedBlockStatement(this.build())
-	}
-
 	build(): BlockStatement {
 		return {
 			span: SPAN,

@@ -1,5 +1,5 @@
 import { WrappedFunctionDeclaration } from '@/tamper/analyzer/decl/decl.function'
-import type { WrappedStatement } from '@/tamper/api/api.statement'
+import { WrappedStatement } from '@/tamper/api/api.statement'
 import {
 	ExpBinaryOperator,
 	JsExpBinary
@@ -71,7 +71,7 @@ export class Transformer {
 
 		testFn.body.push(closuredFn)
 
-		const builded = testFn.asWrapped()
+		const builded = WrappedStatement.from(testFn)
 
 		consola.debug('Generated FN:', builded)
 

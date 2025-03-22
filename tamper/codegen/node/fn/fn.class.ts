@@ -33,10 +33,6 @@ class JsFn<T extends Node> implements BNode<T> {
 		throw new Error('JsFn not implemented build')
 	}
 
-	asWrapped(): WrappedStatement<T> {
-		throw new Error('JsFn not implemented asWrapped')
-	}
-
 	addParam(param: string) {
 		const ident = new JsIdentifier(param)
 		const paramNode = new JsFnParam(ident)
@@ -93,10 +89,6 @@ export class JsFnDecl extends JsFn<FunctionDeclaration> {
 			ctxt: 0
 		}
 	}
-
-	override asWrapped(): WrappedFunctionDeclaration {
-		return new WrappedFunctionDeclaration(this.build())
-	}
 }
 
 export class JsFnArrow extends JsFn<ArrowFunctionExpression> {
@@ -114,9 +106,5 @@ export class JsFnArrow extends JsFn<ArrowFunctionExpression> {
 			type: 'ArrowFunctionExpression',
 			ctxt: 0
 		}
-	}
-
-	override asWrapped(): WrappedArrowFn {
-		return new WrappedArrowFn(this.build())
 	}
 }

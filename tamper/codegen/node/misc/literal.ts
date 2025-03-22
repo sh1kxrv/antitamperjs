@@ -14,10 +14,6 @@ export class JsNumericLiteral implements BNode<NumericLiteral> {
 			ctxt: 0
 		}
 	}
-
-	asWrapped(): WrappedStatement<NumericLiteral> {
-		return new WrappedStatement(this.build())
-	}
 }
 
 export class JsStringLiteral implements BNode<StringLiteral> {
@@ -30,10 +26,6 @@ export class JsStringLiteral implements BNode<StringLiteral> {
 			value: this.value,
 			ctxt: 0
 		}
-	}
-
-	asWrapped(): WrappedStatement<StringLiteral> {
-		return new WrappedStatement(this.build())
 	}
 }
 

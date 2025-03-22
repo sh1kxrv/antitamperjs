@@ -13,8 +13,4 @@ export class JsFnParam implements BNode<Param> {
 			span: SPAN
 		}
 	}
-
-	asWrapped(): WrappedStatement<Param> {
-		return new WrappedStatement(this.build())
-	}
 }

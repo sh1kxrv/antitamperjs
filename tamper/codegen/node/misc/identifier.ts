@@ -9,10 +9,6 @@ export class JsIdentifier implements BNode<Identifier> {
 		public readonly isOptional: boolean = false
 	) {}
 
-	asWrapped(): WrappedIdentifier {
-		return new WrappedIdentifier(this.build())
-	}
-
 	build(): Identifier {
 		return {
 			optional: this.isOptional,

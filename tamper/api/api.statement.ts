@@ -1,5 +1,6 @@
 import { AstFlag } from '@/tamper/api/api.analyzer'
-import type { Statement } from '@swc/core'
+import type { BNode } from '@/tamper/api/api.node'
+import type { Node, Statement } from '@swc/core'
 
 export class WrappedStatement<T extends { type: string } = Statement> {
 	readonly type: string
@@ -24,5 +25,9 @@ export class WrappedStatement<T extends { type: string } = Statement> {
 
 	unwrap() {
 		return this.statement
+	}
+
+	static from<T extends Node>(node: BNode<T>) {
+		return new WrappedStatement(node.build())
 	}
 }

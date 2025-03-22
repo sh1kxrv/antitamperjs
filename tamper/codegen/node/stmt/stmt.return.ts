@@ -15,8 +15,4 @@ export class JsStmtReturn implements BNode<ReturnStatement> {
 			ctxt: 0
 		}
 	}
-
-	asWrapped(): WrappedStatement<ReturnStatement> {
-		return new WrappedStatement(this.build())
-	}
 }

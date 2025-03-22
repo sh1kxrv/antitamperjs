@@ -38,10 +38,6 @@ export class JsExpBinary implements BNode<BinaryExpression> {
 		private readonly right: BNode<any>
 	) {}
 
-	asWrapped(): WrappedStatement<BinaryExpression> {
-		return new WrappedStatement(this.build())
-	}
-
 	build(): BinaryExpression {
 		return {
 			span: SPAN,
