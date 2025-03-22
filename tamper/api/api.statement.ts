@@ -1,7 +1,7 @@
 import { AstFlag } from '@/tamper/api/api.analyzer'
-import type { Node, Statement } from '@swc/core'
+import type { Statement } from '@swc/core'
 
-export class WrappedStatement<T extends Node = Statement> {
+export class WrappedStatement<T extends { type: string } = Statement> {
 	readonly type: string
 	constructor(
 		protected readonly statement: T,

@@ -3,7 +3,7 @@ import type { FunctionDeclaration, Identifier } from '@swc/core'
 import { WrappedStatement } from '@/tamper/api/api.statement'
 import { WrappedBlockStatement } from '@/tamper/analyzer/stmt/stmt.block'
 
-class WrappedIdentifier extends WrappedStatement<Identifier> {
+export class WrappedIdentifier extends WrappedStatement<Identifier> {
 	get name(): string {
 		return this.statement.value
 	}

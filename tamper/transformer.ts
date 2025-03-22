@@ -1,5 +1,15 @@
+import { WrappedFunctionDeclaration } from '@/tamper/analyzer/decl/decl.function'
 import type { WrappedStatement } from '@/tamper/api/api.statement'
-import { transform, type Program, type Statement } from '@swc/core'
+import { JsFnDecl } from '@/tamper/codegen/node/fn/fn.class'
+import { JsIdentifier } from '@/tamper/codegen/node/misc/identifier'
+import { JsFnParam } from '@/tamper/codegen/node/misc/param'
+import {
+	transform,
+	type FunctionDeclaration,
+	type Program,
+	type Statement
+} from '@swc/core'
+import consola from 'consola'
 
 export class Transformer {
 	constructor(private readonly stmts: WrappedStatement[]) {}
@@ -40,7 +50,40 @@ export class Transformer {
 		})
 	}
 
+	private initialize() {
+		const testFn = new JsFnDecl(0, 'test')
+		const testFnParamA = new JsFnParam(new JsIdentifier('a'))
+		testFn.addParam(testFnParamA)
+
+		const builded = testFn.asWrapped()
+
+		consola.debug('Generated FN:', builded)
+
+		this.stmts.unshift(builded)
+	}
+
+	private debugInfo() {
+		for (const wrapped of this.stmts.filter(x => x.isModifiable)) {
+			const unwrapped = wrapped.unwrap()
+			consola.debug('Is modifiable:', unwrapped.type)
+			if (wrapped instanceof WrappedFunctionDeclaration) {
+				consola.debug('Fn:')
+				consola.debug('-> Identifier:', wrapped.identifier.name)
+				consola.debug('\t-> Body:')
+				const stmts = wrapped.body?.getStatements<FunctionDeclaration>(
+					WrappedFunctionDeclaration
+				)
+				consola.debug(stmts)
+			}
+		}
+	}
+
+	private mutate() {}
+
 	transform() {
+		this.debugInfo()
+		this.initialize()
+		this.mutate()
 		return this.compile()
 	}
 }

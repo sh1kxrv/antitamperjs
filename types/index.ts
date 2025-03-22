@@ -1,3 +1,14 @@
-import type { ModuleItem, Statement } from '@swc/core'
+import type {
+	ArrayPattern,
+	AssignmentPattern,
+	BindingIdentifier,
+	ObjectPattern,
+	RestElement
+} from '@swc/core'
 
-export type TStatement = Statement | ModuleItem
+export type Parameter =
+	| BindingIdentifier
+	| ArrayPattern
+	| RestElement
+	| ObjectPattern
+	| AssignmentPattern
