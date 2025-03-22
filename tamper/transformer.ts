@@ -1,8 +1,6 @@
 import { WrappedFunctionDeclaration } from '@/tamper/analyzer/decl/decl.function'
 import type { WrappedStatement } from '@/tamper/api/api.statement'
 import { JsFnDecl } from '@/tamper/codegen/node/fn/fn.class'
-import { JsIdentifier } from '@/tamper/codegen/node/misc/identifier'
-import { JsFnParam } from '@/tamper/codegen/node/misc/param'
 import {
 	transform,
 	type FunctionDeclaration,
@@ -22,13 +20,16 @@ export class Transformer {
 				end: 99999
 			},
 			interpreter: null!,
-			type: 'Module'
+			type: 'Script'
 		}
 	}
 
 	private compile() {
 		const unwrapped = this.stmts.map(x => x.unwrap())
 		const builded = this.build(unwrapped)
+
+		// const astBacked = readFileSync('./rebuilded-ast.json', 'utf-8')
+		// const builded = JSON.parse(astBacked) as Program
 
 		return transform(builded, {
 			jsc: {
@@ -51,9 +52,8 @@ export class Transformer {
 	}
 
 	private initialize() {
-		const testFn = new JsFnDecl(0, 'test')
-		const testFnParamA = new JsFnParam(new JsIdentifier('a'))
-		testFn.addParam(testFnParamA)
+		const testFn = new JsFnDecl(3, 'test')
+		testFn.addParam('a')
 
 		const builded = testFn.asWrapped()
 

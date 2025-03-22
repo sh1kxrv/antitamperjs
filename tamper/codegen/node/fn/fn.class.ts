@@ -1,5 +1,5 @@
 import type { BNode } from '@/tamper/api/api.node'
-import type { JsFnParam } from '@/tamper/codegen/node/misc/param'
+import { JsFnParam } from '@/tamper/codegen/node/misc/param'
 import { JsIdentifier } from '@/tamper/codegen/node/misc/identifier'
 import { JsStmtBlock } from '@/tamper/codegen/node/stmt/stmt.block'
 import { SPAN } from '@/utils'
@@ -19,8 +19,8 @@ class JsFn<T extends Node> implements BNode<T> {
 		isAsync: boolean = false,
 		isGenerator: boolean = false
 	) {
-		this._identifier = new JsIdentifier(name ?? '_anon_')
-		this._body = new JsStmtBlock(ctxt + 1)
+		this._identifier = new JsIdentifier(ctxt - 1, name ?? '_anon_')
+		this._body = new JsStmtBlock(ctxt)
 		this._isAsync = isAsync
 		this._isGenerator = isGenerator
 	}
@@ -38,8 +38,9 @@ class JsFn<T extends Node> implements BNode<T> {
 		throw new Error('JsFn not implemented asWrapped')
 	}
 
-	addParam(param: JsFnParam) {
-		this._params.push(param)
+	addParam(param: string) {
+		const paramNode = new JsFnParam(new JsIdentifier(this.ctxt, param))
+		this._params.push(paramNode)
 		return param
 	}
 
