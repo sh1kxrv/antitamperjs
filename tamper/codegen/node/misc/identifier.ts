@@ -1,4 +1,3 @@
-import { WrappedIdentifier } from '@/tamper/analyzer/decl/decl.function'
 import type { BNode } from '@/tamper/api/api.node'
 import { SPAN } from '@/utils'
 import type { Identifier } from '@swc/core'

@@ -8,9 +8,6 @@ import type {
 	FunctionDeclaration,
 	Node
 } from '@swc/core'
-import type { WrappedStatement } from '@/tamper/api/api.statement'
-import { WrappedFunctionDeclaration } from '@/tamper/analyzer/decl/decl.function'
-import { WrappedArrowFn } from '@/tamper/analyzer/decl/declarator/declarator.arrow-fn'
 
 class JsFn<T extends Node> implements BNode<T> {
 	constructor(

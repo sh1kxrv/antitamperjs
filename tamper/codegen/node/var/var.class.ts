@@ -1,5 +1,4 @@
 import type { BNode } from '@/tamper/api/api.node'
-import type { WrappedStatement } from '@/tamper/api/api.statement'
 import type { JsVarDeclaration } from '@/tamper/codegen/node/var/var.declaration'
 import { SPAN } from '@/utils'
 import type { VariableDeclaration, VariableDeclarationKind } from '@swc/core'

@@ -1,5 +1,4 @@
 import type { BNode } from '@/tamper/api/api.node'
-import { WrappedStatement } from '@/tamper/api/api.statement'
 import { SPAN } from '@/utils'
 import type { NumericLiteral, StringLiteral } from '@swc/core'
 

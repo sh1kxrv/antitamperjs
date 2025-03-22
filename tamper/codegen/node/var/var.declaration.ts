@@ -1,5 +1,4 @@
 import type { BNode } from '@/tamper/api/api.node'
-import { WrappedStatement } from '@/tamper/api/api.statement'
 import type { JsFnArrow } from '@/tamper/codegen/node/fn/fn.class'
 import { JsIdentifier } from '@/tamper/codegen/node/misc/identifier'
 import type {

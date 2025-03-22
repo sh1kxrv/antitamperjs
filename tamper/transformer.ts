@@ -34,9 +34,6 @@ export class Transformer {
 		const unwrapped = this.stmts.map(x => x.unwrap())
 		const builded = this.build(unwrapped)
 
-		// const astBacked = readFileSync('./rebuilded-ast.json', 'utf-8')
-		// const builded = JSON.parse(astBacked) as Program
-
 		return transform(builded, {
 			jsc: {
 				parser: {

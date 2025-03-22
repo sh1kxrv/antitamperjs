@@ -1,4 +1,3 @@
-import { WrappedBlockStatement } from '@/tamper/analyzer/stmt/stmt.block'
 import type { BNode } from '@/tamper/api/api.node'
 import { SPAN } from '@/utils'
 import type { BlockStatement, Statement } from '@swc/core'
