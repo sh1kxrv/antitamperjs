@@ -1,5 +1,5 @@
 diff --git a/index.d.ts b/index.d.ts
-index b3ab7e3d5bd85285ffe3a5bbdc30a603680d57d8..142aa2c30c19c0c2482a65ee6e81972d96d6ff37 100644
+index b3ab7e3d5bd85285ffe3a5bbdc30a603680d57d8..04d50e1a5f145e699648eedf47c37197f65d6f1f 100644
 --- a/index.d.ts
 +++ b/index.d.ts
 @@ -982,13 +982,13 @@ export interface MatchPattern {
@@ -13,7 +13,7 @@ index b3ab7e3d5bd85285ffe3a5bbdc30a603680d57d8..142aa2c30c19c0c2482a65ee6e81972d
  }
  export interface HasSpan {
      span: Span;
-+    ctxt?: number | undefined;
++    ctxt?: number
  }
  export interface HasDecorator {
      decorators?: Decorator[];
