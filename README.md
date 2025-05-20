@@ -1,4 +1,4 @@
-# Anti-Tamper | JS
+# Anti-Tamper | JS (Now Hidden in ExcerfiaLab)
 
 [RxstyTerra](https://github.com/sh1kxrv/rxstyterrv)
 
@@ -7,6 +7,8 @@
 > //
 
 ## How it should work?
+
+SWC Core Wrapped
 
 ### Examples now
 
@@ -65,6 +67,4 @@ function randInt(min, max) {
 
 </td></tr></tbody></table>
 
-## TODO
-
-- [ ] Refactor code
+</td></tr></tbody></table>
